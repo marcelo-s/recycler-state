@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Recycler State</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="toast_error_loading_item">Something went wrong loading the item</string>
+    <string name="toast_loaded_successfully">Item was loaded successfully</string>
+    <string name="item_name">ItemName</string>
+    <string name="item_description">ItemDescription</string>
+    <string name="card_image_description">Item image</string>
+    <string name="button_text_see_item">See Item</string>
+</resources>
