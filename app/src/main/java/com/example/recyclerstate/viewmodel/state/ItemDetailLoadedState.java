@@ -1,14 +1,24 @@
 package com.example.recyclerstate.viewmodel.state;
 
-import com.example.recyclerstate.viewmodel.Entity.Item;
 import com.example.recyclerstate.ui.list.ItemDetailVisitor;
+import com.example.recyclerstate.viewmodel.Entity.Item;
 
-import lombok.Value;
 
-@Value(staticConstructor = "of")
-public class ItemDetailLoadedState implements ItemDetailState {
+public class ItemDetailLoadedState implements IItemDetailState {
 
-    Item item;
+    private Item item;
+
+    public static ItemDetailLoadedState of(Item item) {
+        return new ItemDetailLoadedState(item);
+    }
+
+    private ItemDetailLoadedState(Item item) {
+        this.item = item;
+    }
+
+    public Item getItem() {
+        return item;
+    }
 
     @Override
     public void accept(ItemDetailVisitor itemDetailVisitor) {

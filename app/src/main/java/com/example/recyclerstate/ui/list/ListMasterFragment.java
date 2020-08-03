@@ -1,7 +1,5 @@
 package com.example.recyclerstate.ui.list;
 
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +22,9 @@ import com.example.recyclerstate.viewmodel.ItemsViewModelImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAdapter.IItemRecyclerViewOwner {
 
     private ItemsViewModelImpl itemsViewModel;
@@ -37,7 +38,6 @@ public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAda
         return inflater.inflate(R.layout.fragment_recycler_view_master, container, false);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setGFViewModel();
@@ -46,8 +46,6 @@ public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAda
     }
 
     private void setGFViewModel() {
-        Context applicationContext = requireActivity().getApplicationContext();
-        Application application = requireActivity().getApplication();
         itemsViewModel = new ViewModelProvider(requireActivity()).get(ItemsViewModelImpl.class);
     }
 
@@ -91,9 +89,7 @@ public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAda
 
     @Override
     public View.OnClickListener seeItemButtonListener(ItemsRecyclerViewAdapter.ItemViewHolder holder, Item item) {
-        return view -> {
-            goToItemDetail(view, item);
-        };
+        return view -> goToItemDetail(view, item);
     }
 
     private void goToItemDetail(View view, Item item) {

@@ -19,13 +19,14 @@ import io.reactivex.disposables.Disposable;
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "items.db";
+    public static final String DATABASE_FILE_PATH = "database/items.db";
     private static volatile AppDatabase INSTANCE;
     private static final String TAG = "AppDatabase";
     private static Disposable initialInsertionDisposable;
 
     public abstract IItemDAO itemDAO();
 
-    public static synchronized AppDatabase getInstance(Context context, Runnable onCreateCallback) {
+    public static synchronized AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
@@ -33,7 +34,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             DATABASE_NAME)
-                            .addCallback(populateInitialDataCallback(onCreateCallback))
+                            .createFromAsset(DATABASE_FILE_PATH)
                             .build();
                 }
             }

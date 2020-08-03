@@ -1,20 +1,17 @@
 package com.example.recyclerstate.viewmodel;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.example.recyclerstate.database.AppDatabase;
-import com.example.recyclerstate.database.Repository.ItemLocalRepository;
 import com.example.recyclerstate.viewmodel.Entity.Item;
+import com.example.recyclerstate.viewmodel.state.IItemDetailState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailErrorState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailLoadedState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailLoadingState;
-import com.example.recyclerstate.viewmodel.state.ItemDetailState;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,66 +24,35 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class ItemsViewModelImpl extends AndroidViewModel implements IItemsViewModel {
+public class ItemsViewModelImpl extends ViewModel {
 
     public static final String TAG = "ItemViewModel";
-    private IItemRepository IItemRepository;
-    private AppDatabase appDatabase;
+    private IItemRepository itemRepository;
     private MutableLiveData<List<Item>> itemsLiveData;
-    private MutableLiveData<ItemDetailState> itemDetailStateLiveData;
+    private MutableLiveData<IItemDetailState> itemDetailStateLiveData;
     private Disposable getAllItemsSubscription;
     private Disposable getItemSubscription;
-    private Disposable insertAllItemsSubscription;
     private CompositeDisposable compositeDisposable;
 
     enum DBOperation {
-        INSERT, GET
+        GET
     }
 
-    public ItemsViewModelImpl(@NonNull Application application) {
-        super(application);
-        setDatabase();
-        setItemRepository();
+    @ViewModelInject
+    public ItemsViewModelImpl(IItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
         init();
-    }
-
-    private void setItemRepository() {
-        this.IItemRepository = new ItemLocalRepository(appDatabase.itemDAO());
-    }
-
-    private void setDatabase() {
-        this.appDatabase = AppDatabase.getInstance(getApplication(), this::getOnCreateDBCallback);
     }
 
     private void init() {
         initializeCompositeDisposables();
         initializeAllLiveDataFields();
-        // Initial call to DB in order to initialize DB
-        subscribeToItemsFromDB();
-    }
-
-    private void getOnCreateDBCallback() {
-        List<Item> items = getPrepopulateItems();
-        insertAllItemsSubscription = IItemRepository.insertAll(items)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::onInitialDataInserted,
-                        onItemDBError(DBOperation.INSERT)
-                );
-    }
-
-    private void onInitialDataInserted(List<Long> itemsIds) {
-        String message = String.format("Initial Items inserted into DB: %s",
-                itemsIds.size());
-        Log.e("DB", message);
-        insertAllItemsSubscription.dispose();
         subscribeToItemsFromDB();
     }
 
     private void subscribeToItemsFromDB() {
         removeSubscriptionFromCompositeDisposable(getAllItemsSubscription);
-        getAllItemsSubscription = IItemRepository.getAll()
+        getAllItemsSubscription = itemRepository.getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -102,7 +68,7 @@ public class ItemsViewModelImpl extends AndroidViewModel implements IItemsViewMo
     }
 
     private Item mapIntToItem(int i) {
-        return Item.builder()
+        return new Item.Builder()
                 .name("Item " + i)
                 .description("Description for item " + i)
                 .build();
@@ -122,21 +88,18 @@ public class ItemsViewModelImpl extends AndroidViewModel implements IItemsViewMo
         this.itemDetailStateLiveData = new MutableLiveData<>();
     }
 
-    @Override
     public LiveData<List<Item>> getItems() {
         return this.itemsLiveData;
     }
 
-    @Override
-    public LiveData<ItemDetailState> getItemDetailState() {
+    public LiveData<IItemDetailState> getItemDetailState() {
         return itemDetailStateLiveData;
     }
 
-    @Override
     public void loadItem(long itemId) {
         setItemDetailState(ItemDetailLoadingState.getInstance());
         removeSubscriptionFromCompositeDisposable(getItemSubscription);
-        getItemSubscription = IItemRepository.getItem(itemId)
+        getItemSubscription = itemRepository.getItem(itemId)
                 .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +127,7 @@ public class ItemsViewModelImpl extends AndroidViewModel implements IItemsViewMo
         setItemDetailState(ItemDetailLoadedState.of(item));
     }
 
-    public void setItemDetailState(ItemDetailState itemDetailState) {
+    private void setItemDetailState(IItemDetailState itemDetailState) {
         this.itemDetailStateLiveData.setValue(itemDetailState);
     }
 

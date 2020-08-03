@@ -14,28 +14,35 @@ import com.example.recyclerstate.viewmodel.Entity.Item;
 
 import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
 public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecyclerViewAdapter.ItemViewHolder> {
 
     public interface IItemRecyclerViewOwner {
         View.OnClickListener seeItemButtonListener(ItemViewHolder holder, Item item);
     }
 
-    @Value
-    @EqualsAndHashCode(callSuper = true)
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
-        TextView description;
-        Button seeItemButton;
+        private TextView name;
+        private TextView description;
+        private Button seeItemButton;
 
         private ItemViewHolder(View cardView) {
             super(cardView);
             name = cardView.findViewById(R.id.textView_name);
             description = cardView.findViewById(R.id.textView_item_detail_description);
             seeItemButton = cardView.findViewById(R.id.button_see_item);
+        }
+
+        public TextView getName() {
+            return name;
+        }
+
+        public TextView getDescription() {
+            return description;
+        }
+
+        public Button getSeeItemButton() {
+            return seeItemButton;
         }
     }
 

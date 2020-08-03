@@ -6,25 +6,28 @@ import com.example.recyclerstate.viewmodel.IItemRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 
 public class ItemLocalRepository implements IItemRepository {
 
-    private final IItemDAO IItemDAO;
+    private final IItemDAO itemDAO;
 
-    public ItemLocalRepository(IItemDAO IItemDAO) {
-        this.IItemDAO = IItemDAO;
+    @Inject
+    public ItemLocalRepository(IItemDAO itemDAO) {
+        this.itemDAO = itemDAO;
     }
 
     public Single<List<Item>> getAll() {
-        return IItemDAO.getAll();
+        return itemDAO.getAll();
     }
 
     public Single<Item> getItem(long id) {
-        return IItemDAO.getItem(id);
+        return itemDAO.getItem(id);
     }
 
     public Single<List<Long>> insertAll(List<Item> items) {
-        return IItemDAO.insertAll(items);
+        return itemDAO.insertAll(items);
     }
 }

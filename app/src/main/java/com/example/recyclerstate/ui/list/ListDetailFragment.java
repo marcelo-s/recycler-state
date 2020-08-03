@@ -15,17 +15,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.recyclerstate.R;
 import com.example.recyclerstate.viewmodel.Entity.Item;
-import com.example.recyclerstate.viewmodel.IItemsViewModel;
 import com.example.recyclerstate.viewmodel.ItemsViewModelImpl;
+import com.example.recyclerstate.viewmodel.state.IItemDetailState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailErrorState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailLoadedState;
 import com.example.recyclerstate.viewmodel.state.ItemDetailLoadingState;
-import com.example.recyclerstate.viewmodel.state.ItemDetailState;
 import com.google.android.material.snackbar.Snackbar;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ListDetailFragment extends Fragment implements ItemDetailVisitor {
 
-    private IItemsViewModel itemsViewModel;
+    private ItemsViewModelImpl itemsViewModel;
     private Item item;
     private TextView nameTextView;
     private TextView descriptionTextView;
@@ -58,7 +60,7 @@ public class ListDetailFragment extends Fragment implements ItemDetailVisitor {
         progressBarLoading = view.findViewById(R.id.progressBar_detail);
     }
 
-    private void onItemDetailStateChange(ItemDetailState itemDetailState) {
+    private void onItemDetailStateChange(IItemDetailState itemDetailState) {
         itemDetailState.accept(this);
     }
 
