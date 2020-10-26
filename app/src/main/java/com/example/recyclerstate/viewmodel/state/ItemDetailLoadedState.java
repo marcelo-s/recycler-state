@@ -6,7 +6,7 @@ import com.example.recyclerstate.viewmodel.Entity.Item;
 
 public class ItemDetailLoadedState implements IItemDetailState {
 
-    private Item item;
+    private final Item item;
 
     public static ItemDetailLoadedState of(Item item) {
         return new ItemDetailLoadedState(item);

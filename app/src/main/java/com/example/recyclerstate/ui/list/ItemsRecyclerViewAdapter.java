@@ -22,9 +22,9 @@ public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecycler
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView name;
-        private TextView description;
-        private Button seeItemButton;
+        private final TextView name;
+        private final TextView description;
+        private final Button seeItemButton;
 
         private ItemViewHolder(View cardView) {
             super(cardView);

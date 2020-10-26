@@ -65,7 +65,6 @@ public class ItemsViewModelImpl extends ViewModel {
     }
 
     private void onItemsLoaded(List<Item> items) {
-        Log.e(TAG, "ON ITEMS LOADED");
         itemsLiveData.setValue(items);
     }
 
@@ -104,7 +103,7 @@ public class ItemsViewModelImpl extends ViewModel {
 
     private Consumer<? super Throwable> onItemDBError(DBOperation dbOperation) {
         return throwable -> {
-            Log.e(TAG, "Error with dp operation : " + dbOperation.name());
+            Log.e(TAG, "Error with db operation : " + dbOperation.name());
             throwable.printStackTrace();
             setItemDetailState(ItemDetailErrorState.getInstance());
         };
