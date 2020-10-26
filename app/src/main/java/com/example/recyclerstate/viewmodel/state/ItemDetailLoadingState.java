@@ -4,7 +4,7 @@ import com.example.recyclerstate.ui.list.ItemDetailVisitor;
 
 public class ItemDetailLoadingState implements IItemDetailState {
 
-    private static ItemDetailLoadingState itemDetailLoadingState = new ItemDetailLoadingState();
+    private static final ItemDetailLoadingState itemDetailLoadingState = new ItemDetailLoadingState();
 
     public static ItemDetailLoadingState getInstance() {
         return ItemDetailLoadingState.itemDetailLoadingState;
@@ -17,5 +17,4 @@ public class ItemDetailLoadingState implements IItemDetailState {
     public void accept(ItemDetailVisitor itemDetailVisitor) {
         itemDetailVisitor.handleItemDetailLoadingState(this);
     }
-
 }

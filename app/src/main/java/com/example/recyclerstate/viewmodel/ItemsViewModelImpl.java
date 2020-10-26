@@ -15,8 +15,6 @@ import com.example.recyclerstate.viewmodel.state.ItemDetailLoadingState;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -27,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ItemsViewModelImpl extends ViewModel {
 
     public static final String TAG = "ItemViewModel";
-    private IItemRepository itemRepository;
+    private final IItemRepository itemRepository;
     private MutableLiveData<List<Item>> itemsLiveData;
     private MutableLiveData<IItemDetailState> itemDetailStateLiveData;
     private Disposable getAllItemsSubscription;
@@ -59,19 +57,7 @@ public class ItemsViewModelImpl extends ViewModel {
                         this::onItemsLoaded,
                         onItemDBError(DBOperation.GET)
                 );
-    }
-
-    private List<Item> getPrepopulateItems() {
-        return IntStream.rangeClosed(1, 4)
-                .mapToObj(this::mapIntToItem)
-                .collect(Collectors.toList());
-    }
-
-    private Item mapIntToItem(int i) {
-        return new Item.Builder()
-                .name("Item " + i)
-                .description("Description for item " + i)
-                .build();
+        compositeDisposable.add(getAllItemsSubscription);
     }
 
     private void initializeCompositeDisposables() {
@@ -107,6 +93,7 @@ public class ItemsViewModelImpl extends ViewModel {
                         this::onItemLoaded,
                         onItemDBError(DBOperation.GET)
                 );
+        compositeDisposable.add(getAllItemsSubscription);
     }
 
     private void removeSubscriptionFromCompositeDisposable(Disposable subscription) {

@@ -40,12 +40,12 @@ public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAda
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setGFViewModel();
+        setItemsViewModel();
         setItemsData();
         setViewElements(view);
     }
 
-    private void setGFViewModel() {
+    private void setItemsViewModel() {
         itemsViewModel = new ViewModelProvider(requireActivity()).get(ItemsViewModelImpl.class);
     }
 
@@ -59,12 +59,12 @@ public class ListMasterFragment extends Fragment implements ItemsRecyclerViewAda
     }
 
     private void setItemsRecyclerView(View view) {
-        RecyclerView recyclerViewCreatedGFList = view.findViewById(R.id.recyclerView_items);
-        recyclerViewCreatedGFList.setHasFixedSize(true);
+        RecyclerView itemsRecyclerView = view.findViewById(R.id.recyclerView_items);
+        itemsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(requireActivity());
-        recyclerViewCreatedGFList.setLayoutManager(recyclerViewLayoutManager);
+        itemsRecyclerView.setLayoutManager(recyclerViewLayoutManager);
         itemsRecyclerViewAdapter = new ItemsRecyclerViewAdapter(this, itemsData);
-        recyclerViewCreatedGFList.setAdapter(itemsRecyclerViewAdapter);
+        itemsRecyclerView.setAdapter(itemsRecyclerViewAdapter);
     }
 
     private void setItemsData() {

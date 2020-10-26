@@ -12,8 +12,6 @@ import io.reactivex.Single;
 
 @Dao
 public interface IItemDAO {
-    @Insert
-    Single<Long> insertGF(Item item);
 
     @Query("select * from item where id = :id")
     Single<Item> getItem(long id);

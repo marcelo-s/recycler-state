@@ -41,12 +41,12 @@ public class ListDetailFragment extends Fragment implements ItemDetailVisitor {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setGFViewModel();
+        setItemsViewModel();
         setItemData();
         setViewElements(view);
     }
 
-    private void setGFViewModel() {
+    private void setItemsViewModel() {
         itemsViewModel = new ViewModelProvider(requireActivity()).get(ItemsViewModelImpl.class);
     }
 
